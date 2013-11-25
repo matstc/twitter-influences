@@ -16,7 +16,7 @@ Then export the four environment variables required to initialize the Twitter cl
 
 For example, you can export the consumer key like so:
 
-    > export twitter_consumer_key="VALUEGOESHERE"
+    export twitter_consumer_key="VALUEGOESHERE"
 
 And then run the app:
 

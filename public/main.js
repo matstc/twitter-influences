@@ -25,14 +25,18 @@ function drawChart(data){
 
   var bar = chart.selectAll("g")
     .data(data)
-    .enter().append("g")
-    .attr("class", "bar")
+    .enter().append("g");
+
+  bar.attr("class", "bar")
     .attr("transform", function(d, i) { return "translate(" + leftMargin + "," + (i * (barHeight + barPadding) + axisMargin + barPadding) + ")"; });
 
   bar.append("rect")
-    .attr("width", function(d){return x(d.retweets);})
     .attr("height", barHeight - 1)
-    .on("click", function(d){open(d.link);});
+    .on("click", function(d){open(d.link);})
+    .attr("width", 0);
+
+  var transition = chart.transition().duration(1000);
+  transition.selectAll("rect").attr("width", function(d){return x(d.retweets);});
 
   bar.append("text")
     .attr("class", "tweet-text")
