@@ -14,6 +14,10 @@ Then export the four environment variables required to initialize the Twitter cl
 - twitter\_access\_token
 - twitter\_access\_token\_secret
 
+For example, you can export the consumer key like so:
+
+    > export twitter_consumer_key="VALUEGOESHERE"
+
 And then run the app:
 
     ruby myapp.rb
