@@ -4,7 +4,8 @@ function drawChart(data){
   });
 
   var width = $("body").width();
-  var barHeight = 60;
+  var barHeight = 30;
+  var barPadding = 30;
   var axisMargin = 25;
   var leftMargin = 12;
 
@@ -18,7 +19,7 @@ function drawChart(data){
 
   var chart = d3.select(".chart")
     .attr("width", width)
-    .attr("height", barHeight * data.length + axisMargin);
+    .attr("height", (barHeight + barPadding) * data.length + axisMargin + barPadding);
 
   chart.selectAll("g").remove();
 
@@ -26,19 +27,20 @@ function drawChart(data){
     .data(data)
     .enter().append("g")
     .attr("class", "bar")
-    .attr("transform", function(d, i) { return "translate(" + leftMargin + "," + (i * barHeight + axisMargin) + ")"; });
+    .attr("transform", function(d, i) { return "translate(" + leftMargin + "," + (i * (barHeight + barPadding) + axisMargin + barPadding) + ")"; });
 
   bar.append("rect")
     .attr("width", function(d){return x(d.retweets);})
     .attr("height", barHeight - 1)
     .on("click", function(d){open(d.link);});
 
-  //bar.append("text")
-    //.attr("class", "tweet-text")
-    //.attr("x", leftMargin)
-    //.attr("y", 10)
-    //.attr("dy", ".35em")
-    //.text(function(d){return d.tweet});
+  bar.append("text")
+    .attr("class", "tweet-text")
+    .attr("x", 0)
+    .attr("y", -10)
+    .attr("dy", ".35em")
+    .on("click", function(d){open(d.link);})
+    .text(function(d){return d.tweet});
 
   bar.append("text")
     .attr("class", "author")
@@ -53,6 +55,7 @@ function drawChart(data){
     .attr("x", function(d){var maximum = x(d.retweets) - ((d.retweets + '').length * 15) - 10; return maximum < 0 ? 1 : maximum;})
     .attr("y", barHeight / 2)
     .attr("dy", ".35em")
+    .on("click", function(d){open(d.link);})
     .text(function(d) { return d.retweets; });
 
   chart.append("g")

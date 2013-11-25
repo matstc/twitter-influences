@@ -15,8 +15,8 @@ svg {font-family: Ubuntu;}
 .bar {fill: #35b3ee;}
 .bar text {fill: #000;}
 .bar text.count {fill: #fff; font-size:170%; font-weight:bold;}
-.bar rect:hover, .bar text.author:hover {fill: #46c4ff; cursor:pointer;}
-.bar text.tweet-text {fill:#555;}
+.bar rect:hover, .bar text.author:hover, .count, .bar text.tweet-text:hover {fill: #46c4ff; cursor:pointer;}
+.bar text.tweet-text {fill:#777;}
 .axis text { font: 10px sans-serif; fill: #999;}
 .axis path, .axis line { fill: none; stroke: #999; shape-rendering: crispEdges; }
 .axis path { display: none; }

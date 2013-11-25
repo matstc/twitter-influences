@@ -1,2 +1,1 @@
-- display tweet somewhere for large screens
-
+- add transitions
