@@ -1,16 +1,20 @@
 var globalData;
 var oldWidth;
 
-function drawChart(data){
+function guardedRedraw(data){
   var width = $("body").width();
 
   if (oldWidth !== undefined && Math.abs(width - oldWidth) < 20){ return; }
   oldWidth = width;
+  drawChart(data);
+}
 
+function drawChart(data){
   data.sort(function(a, b){
     return b.retweets - a.retweets;
   });
 
+  var width = $("body").width();
   var barHeight = 30;
   var barPadding = 30;
   var axisMargin = 25;
@@ -78,7 +82,7 @@ function drawChart(data){
 var resizeTimer;
 window.onresize = function(event) {
   clearTimeout(resizeTimer);
-  resizeTimer = setTimeout(function() { drawChart(globalData); }, 100);
+  resizeTimer = setTimeout(function() { guardedRedraw(globalData); }, 100);
 }
 
 var app = angular.module('app', []);
