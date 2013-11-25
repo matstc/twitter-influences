@@ -10,7 +10,7 @@ svg {font-family: Ubuntu;}
 .refreshing-icon {text-align:center; display:none;}
 .chart-title {display:none;}
 .center {text-align:center;}
-.chart-container {margin-top:2em;}
+.chart-container {margin:2em 0;}
 .chart {margin:auto;}
 .bar {fill: #35b3ee;}
 .bar text {fill: #000;}
