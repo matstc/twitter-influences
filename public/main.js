@@ -1,9 +1,16 @@
+var globalData;
+var oldWidth;
+
 function drawChart(data){
+  var width = $("body").width();
+
+  if (oldWidth !== undefined && Math.abs(width - oldWidth) < 20){ return; }
+  oldWidth = width;
+
   data.sort(function(a, b){
     return b.retweets - a.retweets;
   });
 
-  var width = $("body").width();
   var barHeight = 30;
   var barPadding = 30;
   var axisMargin = 25;
