@@ -31,9 +31,7 @@ function drawChart(data){
   bar.append("rect")
     .attr("width", function(d){return x(d.retweets);})
     .attr("height", barHeight - 1)
-    .on("click", function(d){
-      document.location.href = d.link;
-  });
+    .on("click", function(d){open(d.link);});
 
   //bar.append("text")
     //.attr("class", "tweet-text")
@@ -48,9 +46,7 @@ function drawChart(data){
     .attr("y", barHeight / 2)
     .attr("dy", ".35em")
     .text(function(d) { return d.username; })
-    .on("click", function(d){
-      document.location.href = d.user_link;
-  });
+    .on("click", function(d){ open(d.user_link); });
 
   bar.append("text")
     .attr("class", "count")
