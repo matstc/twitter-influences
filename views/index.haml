@@ -1,0 +1,47 @@
+%html{"ng-app" => "app"}
+%head
+  %title Twitter Influences
+  <script src="http://d3js.org/d3.v3.js" charset="utf-8"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.2/angular.js"></script>
+  <link rel=stylesheet href="styles.css" type="text/css">
+  <link rel="stylesheet" href="uikit.almost-flat.css" />
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <link href='' rel='stylesheet' type='text/css'>
+  <script src="uikit.js"></script>
+
+  %style
+    @font-face {
+    font-family: 'FontAwesome';
+    font-style: normal;
+    font-weight: 400;
+    src: local('FontAwesome'), url(fontawesome-webfont.woff) format('woff');
+    }
+
+%body{"ng-controller" => "AppCtrl"}
+  .container
+    .uk-grid
+      .uk-width-medium-1-4
+        &#160;
+      .uk-width-medium-2-4
+        .center
+          .searchbox
+            %h1 Twitter Influences
+            %h2 See who is being retweeted the most
+
+            %form.uk-form{"ng-submit" => "search(searchTerm)"}
+              %input{:id => "search", :type => "text", :name => "term", "ng-model" => "searchTerm", :placeholder => "Enter a hashtag..."}
+              %button.uk-button.uk-button-large.uk-button-primary{:type => "submit", :id => "submit-button"}
+                %i.uk-icon-search
+                Search
+      .uk-width-medium-1-4
+        &#160;
+
+    .chart-container
+      .refreshing-icon
+        .uk-icon-refresh.uk-icon-spin
+      .center
+        .chart-title.uk-text-muted Number of retweets for {{chartTitle}}
+      %svg.chart
+
+
+  <script src="main.js" charset="utf-8"></script>

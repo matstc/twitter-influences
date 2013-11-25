@@ -1,0 +1,22 @@
+svg {font-family: Ubuntu;}
+
+#submit-button {line-height:50px; padding: 0 25px; margin-bottom:5px;}
+#search {font-size:150%; width:10em; height:2.5em; margin-bottom:5px;}
+
+.container {width:100%;  margin-top:6em;}
+.searchbox {padding:5px;}
+.searchbox h1 {font-size:345% !important; font-family: Ubuntu Condensed; font-size:325%; font-weight:bold;}
+.searchbox h2 {margin-top:0; margin-bottom:2em; font-family: Ubuntu Condensed; margin-left:4px; font-size:170%;}
+.refreshing-icon {text-align:center; display:none;}
+.chart-title {display:none;}
+.center {text-align:center;}
+.chart-container {margin-top:2em;}
+.chart {margin:auto;}
+.bar {fill: #35b3ee;}
+.bar text {fill: #000;}
+.bar text.count {fill: #fff; font-size:170%; font-weight:bold;}
+.bar rect:hover, .bar text.author:hover {fill: #46c4ff; cursor:pointer;}
+.bar text.tweet-text {fill:#555;}
+.axis text { font: 10px sans-serif; fill: #999;}
+.axis path, .axis line { fill: none; stroke: #999; shape-rendering: crispEdges; }
+.axis path { display: none; }
