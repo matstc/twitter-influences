@@ -1,88 +1,86 @@
-var globalData;
-var oldWidth;
+var graph = {
+  data: null,
+  oldWidth: null,
 
-function guardedRedraw(data){
-  var width = $("body").width();
+  guardedUpdate: function(){
+    var width = $("body").width();
 
-  if (oldWidth !== undefined && Math.abs(width - oldWidth) < 20){ return; }
-  oldWidth = width;
-  drawChart(data);
-}
+    if (graph.oldWidth !== undefined && Math.abs(width - graph.oldWidth) < 20){ return; }
+    this.oldWidth = width;
+    this.update(this.data);
+  },
 
-function drawChart(data){
-  data.sort(function(a, b){
-    return b.retweets - a.retweets;
-  });
+  update: function(data){
+    this.data = data;
 
-  var width = $("body").width();
-  var barHeight = 30;
-  var barPadding = 30;
-  var axisMargin = 25;
-  var leftMargin = 12;
+    data.sort(function(a, b){
+      return b.retweets - a.retweets;
+    });
 
-  var x = d3.scale.linear()
-    .domain([0, d3.max(data.map(function(i){return i.retweets;}))])
-    .range([0, width - 150]);
+    var width = $("body").width();
+    var barHeight = 30;
+    var barPadding = 30;
+    var axisMargin = 25;
+    var leftMargin = 12;
 
-  var xAxis = d3.svg.axis()
-    .scale(x)
-    .orient("top");
+    var x = d3.scale.linear().domain([0, d3.max(data.map(function(i){return i.retweets;}))]).range([0, width - 150]);
 
-  var chart = d3.select(".chart")
-    .attr("width", width)
-    .attr("height", (barHeight + barPadding) * data.length + axisMargin + barPadding);
+    var xAxis = d3.svg.axis().scale(x).orient("top");
 
-  chart.selectAll("g").remove();
+    var chart = d3.select(".chart")
+      .attr("width", width)
+      .attr("height", (barHeight + barPadding) * data.length + axisMargin + barPadding);
 
-  var bar = chart.selectAll("g")
-    .data(data)
-    .enter().append("g");
+    chart.selectAll("g").remove();
 
-  bar.attr("class", "bar")
-    .attr("transform", function(d, i) { return "translate(" + leftMargin + "," + (i * (barHeight + barPadding) + axisMargin + barPadding) + ")"; });
+    var bar = chart.selectAll("g").data(data).enter().append("g");
 
-  bar.append("rect")
-    .attr("height", barHeight - 1)
-    .on("click", function(d){open(d.link);})
-    .attr("width", 0);
+    bar.attr("class", "bar")
+      .attr("transform", function(d, i) { return "translate(" + leftMargin + "," + (i * (barHeight + barPadding) + axisMargin + barPadding) + ")"; });
 
-  var transition = chart.transition().duration(1000);
-  transition.selectAll("rect").attr("width", function(d){return x(d.retweets);});
+    bar.append("rect")
+      .attr("height", barHeight - 1)
+      .on("click", function(d){open(d.link);})
+      .attr("width", 0);
 
-  bar.append("text")
-    .attr("class", "tweet-text")
-    .attr("x", 0)
-    .attr("y", -10)
-    .attr("dy", ".35em")
-    .on("click", function(d){open(d.link);})
-    .text(function(d){return d.tweet});
+    var transition = chart.transition().duration(1000);
+    transition.selectAll("rect").attr("width", function(d){return x(d.retweets);});
 
-  bar.append("text")
-    .attr("class", "author")
-    .attr("x", function(d) { return x(d.retweets) + 4; })
-    .attr("y", barHeight / 2)
-    .attr("dy", ".35em")
-    .text(function(d) { return d.username; })
-    .on("click", function(d){ open(d.user_link); });
+    bar.append("text")
+      .attr("class", "tweet-text")
+      .attr("x", 0)
+      .attr("y", -10)
+      .attr("dy", ".35em")
+      .on("click", function(d){open(d.link);})
+      .text(function(d){return d.tweet});
 
-  bar.append("text")
-    .attr("class", "count")
-    .attr("x", function(d){var maximum = x(d.retweets) - ((d.retweets + '').length * 15) - 10; return maximum < 0 ? 1 : maximum;})
-    .attr("y", barHeight / 2)
-    .attr("dy", ".35em")
-    .on("click", function(d){open(d.link);})
-    .text(function(d) { return d.retweets; });
+    bar.append("text")
+      .attr("class", "author")
+      .attr("x", function(d) { return x(d.retweets) + 4; })
+      .attr("y", barHeight / 2)
+      .attr("dy", ".35em")
+      .text(function(d) { return d.username; })
+      .on("click", function(d){ open(d.user_link); });
 
-  chart.append("g")
-    .attr("class", "x axis")
-    .attr("transform", "translate(" + leftMargin + "," + axisMargin + ")")
-    .call(xAxis);
-}
+    bar.append("text")
+      .attr("class", "count")
+      .attr("x", function(d){var maximum = x(d.retweets) - ((d.retweets + '').length * 15) - 10; return maximum < 0 ? 1 : maximum;})
+      .attr("y", barHeight / 2)
+      .attr("dy", ".35em")
+      .on("click", function(d){open(d.link);})
+      .text(function(d) { return d.retweets; });
+
+    chart.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(" + leftMargin + "," + axisMargin + ")")
+      .call(xAxis);
+  }
+};
 
 var resizeTimer;
 window.onresize = function(event) {
   clearTimeout(resizeTimer);
-  resizeTimer = setTimeout(function() { guardedRedraw(globalData); }, 100);
+  resizeTimer = setTimeout(function() { graph.guardedUpdate(); }, 100);
 }
 
 var app = angular.module('app', []);
@@ -106,12 +104,8 @@ app.controller('AppCtrl', ['$scope', '$http',
         cleanTerm = cleanTerm.replace(new RegExp('#', 'g'),'%23');
 
         $http({method: "GET", url: '/search/' + cleanTerm}).success(function(json) {
-          var data = json.results;
-          globalData = data;
-
           $scope.chartTitle = term;
-          drawChart(globalData);
-
+          graph.update(json.results);
           showChart();
         });
       }
