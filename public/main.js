@@ -1,6 +1,7 @@
 var graph = {
   data: null,
   oldWidth: null,
+  resizeTimer: null,
 
   guardedUpdate: function(){
     var width = $("body").width();
@@ -77,28 +78,17 @@ var graph = {
   }
 };
 
-var resizeTimer;
-window.onresize = function(event) {
-  clearTimeout(resizeTimer);
-  resizeTimer = setTimeout(function() { graph.guardedUpdate(); }, 100);
-}
+$(window).on('resize', function(e){
+  clearTimeout(graph.resizeTimer);
+  graph.resizeTimer = setTimeout(function() { graph.guardedUpdate(); }, 100);
+});
 
 var app = angular.module('app', []);
  
-var hideChart = function(){
-  $(".refreshing-icon").show();
-  $(".chart-title").hide();
-};
-
-var showChart = function(){
-  $(".refreshing-icon").hide();
-  $(".chart-title").show();
-};
-
 app.controller('AppCtrl', ['$scope', '$http',
     function($scope, $http) {
       $scope.search = function(term){
-        hideChart();
+        $scope.hideChart();
         console.log("searching twitter for " + term);
         cleanTerm = encodeURI(term);
         cleanTerm = cleanTerm.replace(new RegExp('#', 'g'),'%23');
@@ -106,9 +96,20 @@ app.controller('AppCtrl', ['$scope', '$http',
         $http({method: "GET", url: '/search/' + cleanTerm}).success(function(json) {
           $scope.chartTitle = term;
           graph.update(json.results);
-          showChart();
+          $scope.showChart();
         });
-      }
+      };
+
+      $scope.hideChart = function(){
+        $(".refreshing-icon").show();
+        $(".chart-title").hide();
+      };
+
+      $scope.showChart = function(){
+        $(".refreshing-icon").hide();
+        $(".chart-title").show();
+      };
+
       $scope.search("#climate");
       $scope.chartTitle = "#climate";
     }]
