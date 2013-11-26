@@ -88,13 +88,19 @@ var app = angular.module('app', []);
 app.controller('AppCtrl', ['$scope', '$http',
     function($scope, $http) {
       $scope.search = function(term){
+        console.log("Searching twitter for " + term);
+
         $scope.hideChart();
-        console.log("searching twitter for " + term);
         cleanTerm = encodeURI(term);
         cleanTerm = cleanTerm.replace(new RegExp('#', 'g'),'%23');
 
         $http({method: "GET", url: '/search/' + cleanTerm}).success(function(json) {
-          $scope.chartTitle = term;
+          if (json.results.length === 0){
+            $scope.chartTitle = "There are no retweets for " + term;
+          } else {
+            $scope.chartTitle = "Number of retweets for " + term;
+          }
+
           graph.update(json.results);
           $scope.showChart();
         });
@@ -111,6 +117,5 @@ app.controller('AppCtrl', ['$scope', '$http',
       };
 
       $scope.search("#climate");
-      $scope.chartTitle = "#climate";
     }]
 );
